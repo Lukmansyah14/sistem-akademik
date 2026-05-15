@@ -30,21 +30,13 @@ Route::resource('jadwal', JadwalController::class);
 
 Route::resource('nilai', NilaiController::class);
 
-/*
-|--------------------------------------------------------------------------
-| Guest Routes (Hanya untuk yang belum login)
-|--------------------------------------------------------------------------
-*/
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Authenticated Routes (Hanya untuk yang sudah login)
-|--------------------------------------------------------------------------
-*/
+
 Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -57,8 +49,5 @@ Route::middleware('auth')->group(function () {
     // Mahasiswa Routes
     Route::resource('/mahasiswa', MahasiswaController::class);
     
-    // Routes lainnya (Dosen, Jurusan, dll)
-    // Route::resource('/dosen', DosenController::class);
-    // Route::resource('/jurusan', JurusanController::class);
-    // dst...
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
