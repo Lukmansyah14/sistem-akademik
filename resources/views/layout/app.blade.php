@@ -40,6 +40,10 @@
                 Mata Kuliah
             </a>
 
+            <a href="/absensi" class="btn btn-light btn-sm">
+                Absensi
+            </a>
+
             <a href="/semester" class="btn btn-light btn-sm">
                 Semester
             </a>
