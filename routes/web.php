@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\RuanganController;
@@ -31,3 +32,24 @@ Route::resource('jadwal', JadwalController::class);
 Route::resource('nilai', NilaiController::class);
 
 Route::resource('absensi', AbsensiController::class);
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+});
+
+
+Route::middleware('auth')->group(function () {
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // Dashboard
+    Route::get('/', function () {
+        return redirect('/mahasiswa');
+    });
+    
+    // Mahasiswa Routes
+    Route::resource('/mahasiswa', MahasiswaController::class);
+    
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});

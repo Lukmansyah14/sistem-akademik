@@ -58,6 +58,29 @@
 
         </div>
 
+        <div class="ms-auto d-flex align-items-center gap-2">
+            @auth
+                <!-- Tampilkan nama user -->
+                <span class="navbar-text text-light d-none d-lg-inline">
+                    👤 {{ Auth::user()->name }}
+                </span>
+                
+                <!-- Tombol Logout (POST + CSRF) -->
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-light btn-sm px-3" 
+                            onclick="return confirm('Yakin mau logout?')">
+                        🔓 Logout
+                    </button>
+                </form>
+            @else
+                <!-- Kalau belum login, tampilkan tombol Login -->
+                <a href="{{ route('login') }}" class="btn btn-primary btn-sm">Login</a>
+            @endauth
+        </div>
+
+        
+
     </div>
 </nav>
 
