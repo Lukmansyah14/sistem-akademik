@@ -48,7 +48,43 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-info">📚 Mata Kuliah</h5>
+                                <p class="card-text text-muted small">Mengolah data kurikulum master mata kuliah, bobot SKS, dan kode MK.</p>
+                            </div>
+                            <a href="{{ url('/matakuliah') }}" class="btn btn-info text-white btn-block mt-3">Buka Mata Kuliah</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-danger">🏛️ Jurusan / Prodi</h5>
+                                <p class="card-text text-muted small">Mengatur daftar Program Studi serta Fakultas di lingkungan kampus.</p>
+                            </div>
+                            <a href="{{ url('/jurusan') }}" class="btn btn-danger btn-block mt-3">Buka Menu Jurusan</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-secondary">🗓️ Semester</h5>
+                                <p class="card-text text-muted small">Mengatur status semester aktif, apakah ganjil atau genap.</p>
+                            </div>
+                            <a href="{{ url('/semester') }}" class="btn btn-secondary btn-block mt-3">Buka Menu Semester</a>
+                        </div>
+                    </div>
+                </div>
+            </div> {{-- Akhir dari class row --}}
 
         </div>
     </div>
