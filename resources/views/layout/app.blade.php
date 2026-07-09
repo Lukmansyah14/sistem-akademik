@@ -65,13 +65,13 @@
 <div class="container mt-4">
 
     @auth
-        @if(!Request::is('/') && !Request::is('baa/dashboard'))
+        @if(!Request::is('/') && !Request::is('baa/dashboard') && !Request::is('admin/dashboard'))
             @if(auth()->user()->role == 'baa')
                 <a href="{{ route('baa.dashboard') }}" class="btn btn-sm btn-outline-secondary mb-3">
                     ⬅️ Kembali ke Dashboard BAA
                 </a>
             @elseif(auth()->user()->role == 'admin')
-                <a href="{{ url('/mahasiswa') }}" class="btn btn-sm btn-outline-secondary mb-3">
+                <a href="{{ url('/admin/dashboard') }}" class="btn btn-sm btn-outline-secondary mb-3">
                     ⬅️ Kembali ke Dashboard Admin
                 </a>
             @endif

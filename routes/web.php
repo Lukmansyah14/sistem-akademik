@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('baa.dashboard');
         } elseif ($role == 'dosen') {
             return redirect('/nilai'); 
+        } elseif ($role == 'admin') {
+            return redirect('/admin/dashboard'); // TAH IEU: Admin diarahkeun ka Dashboardna, lain ka mahasiswa polosan deui!
         }
 
         return redirect('/mahasiswa'); 
@@ -44,7 +46,6 @@ Route::middleware('auth')->group(function () {
 
     // ------------------------------------------
     // A. HAK AKSES UTAMA: BAA & ADMIN 
-    // (Ayeuna BAA geus bisa nénjo data Mahasiswa, Dosen, jeung Nilai)
     // ------------------------------------------
     Route::middleware('role:baa,admin')->group(function () {
         
@@ -61,7 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('semester', SemesterController::class);
         Route::resource('jadwal', JadwalController::class);
 
-        // TAH IEU LUR: BAA geus dibéré aksés asup ka dieu
+        // BAA & Admin sarua bisa CRUD ayeuna mah
         Route::resource('mahasiswa', MahasiswaController::class);
         Route::resource('dosen', DosenController::class);
         Route::resource('nilai', NilaiController::class);
@@ -69,19 +70,19 @@ Route::middleware('auth')->group(function () {
 
     // ------------------------------------------
     // B. HAK AKSES KHUSUS: ADMIN UTAMA SAJA
-    // (Kosongkeun heula da bieu data mhs/dosen geus dipindahkeun ka luhur)
     // ------------------------------------------
     Route::middleware('role:admin')->group(function () {
-        // Kontrol akun tingkat luhur mun diperlukeun engké
+        // TAH IEU LUR: Nambahkeun rute tampilan dashboard khusus admin di dieu!
+        Route::get('/admin/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('admin.dashboard');
     });
 
     // ------------------------------------------
     // C. HAK AKSES KHUSUS: DOSEN & ADMIN
-    // (Urusan input nilai & absensi)
     // ------------------------------------------
     Route::middleware('role:dosen,admin')->group(function () {
         Route::resource('absensi', AbsensiController::class);
-        // Nilai controller dihancupkeun fungsina keur dosen di dieu oge meunang
     });
 
 });
