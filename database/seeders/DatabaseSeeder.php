@@ -18,11 +18,37 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@akademik.com'],  // Kunci pencarian (harus unique)
             [                                   // Data yang mau diisi/diupdate
                 'name' => 'Administrator',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('admin123'),
                 'role' => 'admin',
             ]
         );
-
+        // 1. Akun keur BAA
+        User::updateOrCreate(
+            ['email' => 'baa@akademik.com'],
+            [
+                'name' => 'Biro Administrasi Akademik',
+                'password' => Hash::make('baa123'),
+                'role' => 'baa',
+            ]
+        );
+        // 2. Akun keur Dosen (Opsional sekalian bisi butuh)
+        User::updateOrCreate(
+            ['email' => 'dosen@akademik.com'],
+            [
+                'name' => 'Dosen',
+                'password' => Hash::make('dosen123'),
+                'role' => 'dosen',
+            ]
+        );
+        // 3. Akun keur Mahasiswa (Opsional sekalian bisi butuh)
+        User::updateOrCreate(
+            ['email' => 'mahasiswa@akademik.com'],
+            [
+                'name' => 'Mahasiswa',
+                'password' => Hash::make('mhs123'),
+                'role' => 'mahasiswa',
+            ]
+        );
         // Optional: Tambah info di console
         $this->command->info('✅ Admin user ready!');
     }

@@ -35,7 +35,7 @@ class LoginController extends Controller
             // Regenerasi session
             $request->session()->regenerate();
 
-            return redirect()->intended('/mahasiswa');
+            return redirect()->intended('/');
         }
 
         // Login gagal
