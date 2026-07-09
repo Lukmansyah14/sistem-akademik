@@ -84,6 +84,43 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-dark">🎓 Data Mahasiswa</h5>
+                                <p class="card-text text-muted small">Mengolah data induk mahasiswa, NIM, sarta ploting kelas perkuliahan.</p>
+                            </div>
+                            <a href="{{ url('/mahasiswa') }}" class="btn btn-dark btn-block mt-3">Buka Menu Mahasiswa</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-dark">👨‍🏫 Data Dosen</h5>
+                                <p class="card-text text-muted small">Mengatur data induk dosen, NIDN, sarta koordinasi jadwal mata kuliah master.</p>
+                            </div>
+                            <a href="{{ url('/dosen') }}" class="btn btn-dark btn-block mt-3">Buka Menu Dosen</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0 bg-light">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold text-dark">📊 Nilai Akademik</h5>
+                                <p class="card-text text-muted small">Monitoring transkrip nilai mahasiswa untuk keperluan administrasi. <span class="badge bg-secondary">Read-Only</span></p>
+                            </div>
+                            <a href="{{ url('/nilai') }}" class="btn btn-outline-dark btn-block mt-3">Lihat Nilai Kuliah</a>
+                        </div>
+                    </div>
+                </div>
+
             </div> {{-- Akhir dari class row --}}
 
         </div>

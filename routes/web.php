@@ -29,12 +29,12 @@ Route::middleware('auth')->group(function () {
     // Logout 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     
-    // Route '/' geus dibenerkeun kurungna + dialungkeun ka dashboard masing-masing
+    // Route '/'
     Route::get('/', function () {
         $role = auth()->user()->role;
 
         if ($role == 'baa') {
-            return redirect()->route('baa.dashboard'); // <--- Lumpat ka kamar dashboard BAA
+            return redirect()->route('baa.dashboard');
         } elseif ($role == 'dosen') {
             return redirect('/nilai'); 
         }
@@ -43,37 +43,45 @@ Route::middleware('auth')->group(function () {
     });
 
     // ------------------------------------------
-    // A. HAK AKSES KHUSUS: BAA & ADMIN 
+    // A. HAK AKSES UTAMA: BAA & ADMIN 
+    // (Ayeuna BAA geus bisa nénjo data Mahasiswa, Dosen, jeung Nilai)
     // ------------------------------------------
     Route::middleware('role:baa,admin')->group(function () {
         
-        // IEU KAMAR BARU KHUSUS BAA NU DIOMONGKEUN BIEU, LUR!
+        // Dashboard BAA
         Route::get('/baa/dashboard', function () {
             return view('baa.dashboard'); 
         })->name('baa.dashboard');
 
+        // Master data akademik biasa
         Route::resource('kelas', KelasController::class);
         Route::resource('ruangan', RuanganController::class);
         Route::resource('matakuliah', MataKuliahController::class);
         Route::resource('jurusan', JurusanController::class);
         Route::resource('semester', SemesterController::class);
         Route::resource('jadwal', JadwalController::class);
+
+        // TAH IEU LUR: BAA geus dibéré aksés asup ka dieu
+        Route::resource('mahasiswa', MahasiswaController::class);
+        Route::resource('dosen', DosenController::class);
+        Route::resource('nilai', NilaiController::class);
     });
 
     // ------------------------------------------
-    // B. HAK AKSES KHUSUS: ADMIN UTAMA SAJA 
+    // B. HAK AKSES KHUSUS: ADMIN UTAMA SAJA
+    // (Kosongkeun heula da bieu data mhs/dosen geus dipindahkeun ka luhur)
     // ------------------------------------------
     Route::middleware('role:admin')->group(function () {
-        Route::resource('dosen', DosenController::class);
-        Route::resource('mahasiswa', MahasiswaController::class);
+        // Kontrol akun tingkat luhur mun diperlukeun engké
     });
 
     // ------------------------------------------
     // C. HAK AKSES KHUSUS: DOSEN & ADMIN
+    // (Urusan input nilai & absensi)
     // ------------------------------------------
     Route::middleware('role:dosen,admin')->group(function () {
-        Route::resource('nilai', NilaiController::class);
         Route::resource('absensi', AbsensiController::class);
+        // Nilai controller dihancupkeun fungsina keur dosen di dieu oge meunang
     });
 
 });

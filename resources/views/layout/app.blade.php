@@ -16,7 +16,7 @@
 
         <div class="d-flex gap-2 flex-wrap">
             @auth
-                @if(auth()->user()->role == 'admin')
+                @if(in_array(auth()->user()->role, ['baa', 'admin']))
                     <a href="{{ url('/mahasiswa') }}" class="btn btn-light btn-sm">Mahasiswa</a>
                     <a href="{{ url('/dosen') }}" class="btn btn-light btn-sm">Dosen</a>
                 @endif
@@ -30,9 +30,12 @@
                     <a href="{{ url('/jadwal') }}" class="btn btn-light btn-sm">Jadwal</a>
                 @endif
 
+                @if(in_array(auth()->user()->role, ['baa', 'dosen', 'admin']))
+                    <a href="{{ url('/nilai') }}" class="btn btn-light btn-sm">Nilai</a>
+                @endif
+
                 @if(in_array(auth()->user()->role, ['dosen', 'admin']))
                     <a href="{{ url('/absensi') }}" class="btn btn-light btn-sm">Absensi</a>
-                    <a href="{{ url('/nilai') }}" class="btn btn-light btn-sm">Nilai</a>
                 @endif
             @endauth
         </div>

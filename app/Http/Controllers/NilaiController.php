@@ -10,7 +10,6 @@ class NilaiController extends Controller
     public function index()
     {
         $data = Nilai::all();
-
         return view('nilai.index', compact('data'));
     }
 
@@ -22,32 +21,26 @@ class NilaiController extends Controller
     public function store(Request $request)
     {
         Nilai::create($request->all());
-
         return redirect('/nilai');
     }
 
     public function edit($id)
     {
         $data = Nilai::findOrFail($id);
-
         return view('nilai.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
     {
         $data = Nilai::findOrFail($id);
-
         $data->update($request->all());
-
         return redirect('/nilai');
     }
 
     public function destroy($id)
     {
         $data = Nilai::findOrFail($id);
-
         $data->delete();
-
         return redirect('/nilai');
     }
 }
