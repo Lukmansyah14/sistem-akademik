@@ -12,6 +12,9 @@ use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\AbsensiController;
+use App\Models\Jadwal;
+use App\Models\Absensi;
+use App\Models\Nilai;
 
 // ==========================================
 // 1. GUEST ROUTES (Keur nu can login)
@@ -36,7 +39,7 @@ Route::middleware('auth')->group(function () {
         if ($role == 'baa') {
             return redirect()->route('baa.dashboard');
         } elseif ($role == 'dosen') {
-            return redirect('/nilai'); 
+            return redirect()->route('dosen.dashboard');
         } elseif ($role == 'admin') {
             return redirect('/admin/dashboard'); // TAH IEU: Admin diarahkeun ka Dashboardna, lain ka mahasiswa polosan deui!
         }
@@ -65,7 +68,6 @@ Route::middleware('auth')->group(function () {
         // BAA & Admin sarua bisa CRUD ayeuna mah
         Route::resource('mahasiswa', MahasiswaController::class);
         Route::resource('dosen', DosenController::class);
-        Route::resource('nilai', NilaiController::class);
     });
 
     // ------------------------------------------
@@ -82,7 +84,29 @@ Route::middleware('auth')->group(function () {
     // C. HAK AKSES KHUSUS: DOSEN & ADMIN
     // ------------------------------------------
     Route::middleware('role:dosen,admin')->group(function () {
+
+        // Dashboard Dosen
+        Route::get('/dosen/dashboard', function () {
+            $namaDosen = auth()->user()->name;
+
+            $jumlahJadwal   = Jadwal::where('dosen', $namaDosen)->count();
+            $jadwalSaya     = Jadwal::where('dosen', $namaDosen)->orderBy('hari')->orderBy('jam')->get();
+            $absensiHariIni = Absensi::whereDate('tanggal', today())->count();
+            $jumlahNilai    = Nilai::count();
+
+            return view('dosen.dashboard', compact(
+                'jumlahJadwal', 'jadwalSaya', 'absensiHariIni', 'jumlahNilai'
+            ));
+        })->name('dosen.dashboard');
+
         Route::resource('absensi', AbsensiController::class);
+    });
+
+    // ------------------------------------------
+    // D. HAK AKSES: BAA, DOSEN & ADMIN (Nilai)
+    // ------------------------------------------
+    Route::middleware('role:baa,dosen,admin')->group(function () {
+        Route::resource('nilai', NilaiController::class);
     });
 
 });
