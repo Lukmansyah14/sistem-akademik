@@ -86,9 +86,13 @@ Route::middleware('auth')->group(function () {
             $namaUser  = auth()->user()->name;
             $mahasiswa = Mahasiswa::where('nama', $namaUser)->first();
 
-            $nilaiSaya   = Nilai::where('nama_mahasiswa', $namaUser)->get();
+            $nilaiSaya   = Nilai::where('nama_mahasiswa', $namaUser)->orderByDesc('nilai_angka')->get();
             $jumlahNilai = $nilaiSaya->count();
             $rataRata    = $jumlahNilai > 0 ? round($nilaiSaya->avg('nilai_angka'), 2) : 0;
+
+            // Mata kuliah dengan nilai tertinggi & terendah (untuk sorotan performa)
+            $nilaiTertinggi = $jumlahNilai > 0 ? $nilaiSaya->sortByDesc('nilai_angka')->first() : null;
+            $nilaiTerendah  = $jumlahNilai > 0 ? $nilaiSaya->sortBy('nilai_angka')->first() : null;
 
             $absensiSaya = $mahasiswa
                 ? Absensi::with('jadwal')->where('mahasiswa_id', $mahasiswa->id)->orderByDesc('tanggal')->get()
@@ -101,8 +105,27 @@ Route::middleware('auth')->group(function () {
                 'alpha' => $absensiSaya->where('status', 'alpha')->count(),
             ];
 
+            $totalAbsensi        = $absensiSaya->count();
+            $persentaseKehadiran = $totalAbsensi > 0 ? round(($rekapAbsensi['hadir'] / $totalAbsensi) * 100) : 100;
+
+            // Jadwal kuliah hari ini (dicocokkan dari nama hari dalam Bahasa Indonesia)
+            $namaHariIni = [
+                'Sunday'    => 'Minggu',
+                'Monday'    => 'Senin',
+                'Tuesday'   => 'Selasa',
+                'Wednesday' => 'Rabu',
+                'Thursday'  => 'Kamis',
+                'Friday'    => 'Jumat',
+                'Saturday'  => 'Sabtu',
+            ][now()->format('l')];
+
+            $jadwalHariIni = Jadwal::whereRaw('LOWER(TRIM(hari)) = ?', [strtolower($namaHariIni)])
+                ->orderBy('jam')
+                ->get();
+
             return view('mahasiswa.dashboard', compact(
-                'mahasiswa', 'nilaiSaya', 'jumlahNilai', 'rataRata', 'absensiSaya', 'rekapAbsensi'
+                'mahasiswa', 'nilaiSaya', 'jumlahNilai', 'rataRata', 'absensiSaya', 'rekapAbsensi',
+                'nilaiTertinggi', 'nilaiTerendah', 'persentaseKehadiran', 'jadwalHariIni', 'namaHariIni'
             ));
         })->name('mahasiswa.dashboard');
     });
