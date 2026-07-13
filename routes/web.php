@@ -15,6 +15,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Models\Jadwal;
 use App\Models\Absensi;
 use App\Models\Nilai;
+use App\Models\Mahasiswa;
 
 // ==========================================
 // 1. GUEST ROUTES (Keur nu can login)
@@ -42,9 +43,68 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('dosen.dashboard');
         } elseif ($role == 'admin') {
             return redirect('/admin/dashboard'); // TAH IEU: Admin diarahkeun ka Dashboardna, lain ka mahasiswa polosan deui!
+        } elseif ($role == 'mahasiswa') {
+            return redirect()->route('mahasiswa.dashboard');
         }
 
         return redirect('/mahasiswa'); 
+    });
+
+    // ------------------------------------------
+    // PENTING: Dashboard dosen & mahasiswa HARUS didaftarkan
+    // SEBELUM Route::resource('dosen'/'mahasiswa', ...) di bawah.
+    // Soalna Route::resource otomatis bikin rute wildcard
+    // GET dosen/{dosen} jeung GET mahasiswa/{mahasiswa} (halaman show),
+    // nu bakal "nelen" /dosen/dashboard jeung /mahasiswa/dashboard
+    // lamun didaftarkeun ti heula (Laravel newiskeun rute ti luhur ka handap).
+    // ------------------------------------------
+    Route::middleware('role:dosen,admin')->group(function () {
+        Route::get('/dosen/dashboard', function () {
+            $namaDosen = auth()->user()->name;
+
+            $jumlahJadwal   = Jadwal::where('dosen', $namaDosen)->count();
+            $jadwalSaya     = Jadwal::where('dosen', $namaDosen)->orderBy('hari')->orderBy('jam')->get();
+            $absensiHariIni = Absensi::whereDate('tanggal', today())->count();
+            $jumlahNilai    = Nilai::count();
+
+            return view('dosen.dashboard', compact(
+                'jumlahJadwal', 'jadwalSaya', 'absensiHariIni', 'jumlahNilai'
+            ));
+        })->name('dosen.dashboard');
+
+        // Lihat seluruh jadwal kuliah (read-only, teu bisa edit/hapus)
+        Route::get('/dosen/jadwal', function () {
+            $namaDosen    = auth()->user()->name;
+            $semuaJadwal  = Jadwal::orderBy('hari')->orderBy('jam')->get();
+
+            return view('dosen.jadwal', compact('semuaJadwal', 'namaDosen'));
+        })->name('dosen.jadwal');
+    });
+
+    Route::middleware('role:mahasiswa,admin')->group(function () {
+        Route::get('/mahasiswa/dashboard', function () {
+            $namaUser  = auth()->user()->name;
+            $mahasiswa = Mahasiswa::where('nama', $namaUser)->first();
+
+            $nilaiSaya   = Nilai::where('nama_mahasiswa', $namaUser)->get();
+            $jumlahNilai = $nilaiSaya->count();
+            $rataRata    = $jumlahNilai > 0 ? round($nilaiSaya->avg('nilai_angka'), 2) : 0;
+
+            $absensiSaya = $mahasiswa
+                ? Absensi::with('jadwal')->where('mahasiswa_id', $mahasiswa->id)->orderByDesc('tanggal')->get()
+                : collect();
+
+            $rekapAbsensi = [
+                'hadir' => $absensiSaya->where('status', 'hadir')->count(),
+                'sakit' => $absensiSaya->where('status', 'sakit')->count(),
+                'izin'  => $absensiSaya->where('status', 'izin')->count(),
+                'alpha' => $absensiSaya->where('status', 'alpha')->count(),
+            ];
+
+            return view('mahasiswa.dashboard', compact(
+                'mahasiswa', 'nilaiSaya', 'jumlahNilai', 'rataRata', 'absensiSaya', 'rekapAbsensi'
+            ));
+        })->name('mahasiswa.dashboard');
     });
 
     // ------------------------------------------
@@ -84,21 +144,6 @@ Route::middleware('auth')->group(function () {
     // C. HAK AKSES KHUSUS: DOSEN & ADMIN
     // ------------------------------------------
     Route::middleware('role:dosen,admin')->group(function () {
-
-        // Dashboard Dosen
-        Route::get('/dosen/dashboard', function () {
-            $namaDosen = auth()->user()->name;
-
-            $jumlahJadwal   = Jadwal::where('dosen', $namaDosen)->count();
-            $jadwalSaya     = Jadwal::where('dosen', $namaDosen)->orderBy('hari')->orderBy('jam')->get();
-            $absensiHariIni = Absensi::whereDate('tanggal', today())->count();
-            $jumlahNilai    = Nilai::count();
-
-            return view('dosen.dashboard', compact(
-                'jumlahJadwal', 'jadwalSaya', 'absensiHariIni', 'jumlahNilai'
-            ));
-        })->name('dosen.dashboard');
-
         Route::resource('absensi', AbsensiController::class);
     });
 
