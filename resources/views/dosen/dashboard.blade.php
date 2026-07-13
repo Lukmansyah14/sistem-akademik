@@ -45,7 +45,7 @@
     {{-- Menu Utama --}}
     <h4 class="mb-3 font-weight-bold text-secondary">Menu Dosen:</h4>
     <div class="row mb-4">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-4 mb-3">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <div>
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-4 mb-3">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <div>
@@ -65,6 +65,18 @@
                         <p class="card-text text-muted small">Catat dan pantau kehadiran mahasiswa di setiap pertemuan.</p>
                     </div>
                     <a href="{{ url('/absensi') }}" class="btn btn-success btn-block mt-3">Kelola Absensi</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title font-weight-bold text-info">📅 Jadwal Kuliah</h5>
+                        <p class="card-text text-muted small">Lihat seluruh jadwal perkuliahan, termasuk jadwal mengajar Anda.</p>
+                    </div>
+                    <a href="{{ route('dosen.jadwal') }}" class="btn btn-info btn-block mt-3 text-white">Lihat Jadwal</a>
                 </div>
             </div>
         </div>
