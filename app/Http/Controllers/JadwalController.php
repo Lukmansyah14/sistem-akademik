@@ -3,51 +3,76 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\MataKuliah;
+use App\Models\Dosen;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
     public function index()
     {
-        $data = Jadwal::all();
+        // eager load supaya tidak N+1 query
+        $data = Jadwal::with(['mataKuliah', 'dosen', 'ruangan'])->get();
 
         return view('jadwal.index', compact('data'));
     }
 
     public function create()
     {
-        return view('jadwal.create');
+        $mataKuliahs = MataKuliah::all();
+        $dosens      = Dosen::all();
+        $ruangans    = Ruangan::all();
+
+        return view('jadwal.create', compact('mataKuliahs', 'dosens', 'ruangans'));
     }
 
     public function store(Request $request)
     {
-        Jadwal::create($request->all());
+        $validated = $request->validate([
+            'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
+            'dosen_id'       => 'required|exists:dosens,id',
+            'ruangan_id'     => 'required|exists:ruangans,id',
+            'hari'           => 'required|string',
+            'jam'            => 'required|string',
+        ]);
 
-        return redirect('/jadwal');
+        Jadwal::create($validated);
+
+        return redirect('/jadwal')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $data = Jadwal::findOrFail($id);
+        $data        = Jadwal::findOrFail($id);
+        $mataKuliahs = MataKuliah::all();
+        $dosens      = Dosen::all();
+        $ruangans    = Ruangan::all();
 
-        return view('jadwal.edit', compact('data'));
+        return view('jadwal.edit', compact('data', 'mataKuliahs', 'dosens', 'ruangans'));
     }
 
     public function update(Request $request, $id)
     {
         $data = Jadwal::findOrFail($id);
 
-        $data->update($request->all());
+        $validated = $request->validate([
+            'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
+            'dosen_id'       => 'required|exists:dosens,id',
+            'ruangan_id'     => 'required|exists:ruangans,id',
+            'hari'           => 'required|string',
+            'jam'            => 'required|string',
+        ]);
 
-        return redirect('/jadwal');
+        $data->update($validated);
+
+        return redirect('/jadwal')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        $data = Jadwal::findOrFail($id);
+        Jadwal::findOrFail($id)->delete();
 
-        $data->delete();
-
-        return redirect('/jadwal');
+        return redirect('/jadwal')->with('success', 'Jadwal berhasil dihapus.');
     }
 }
