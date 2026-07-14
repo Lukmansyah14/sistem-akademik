@@ -5,7 +5,6 @@
 <h1>Edit Dosen</h1>
 
 <form action="/dosen/{{ $dosen->id }}" method="POST">
-
     @csrf
     @method('PUT')
 
@@ -21,13 +20,16 @@
 
     <div class="mb-3">
         <label>Mata Kuliah</label>
-        <input type="text" name="matakuliah" class="form-control" value="{{ $dosen->matakuliah }}">
+        <select name="mata_kuliah_id" class="form-control">
+            @foreach ($mataKuliahs as $mk)
+                <option value="{{ $mk->id }}" {{ $dosen->mata_kuliah_id == $mk->id ? 'selected' : '' }}>
+                    {{ $mk->nama_mk }}
+                </option>
+            @endforeach
+        </select>
     </div>
 
-    <button class="btn btn-success">
-        Update
-    </button>
-
+    <button class="btn btn-success">Update</button>
 </form>
 
 @endsection
