@@ -4,6 +4,10 @@
 
 <h1>Data Nilai</h1>
 
+@if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
 @if(in_array(auth()->user()->role, ['dosen', 'admin']))
 <a href="/nilai/create" class="btn btn-primary mb-3">
     Tambah Nilai
@@ -25,8 +29,8 @@
         @foreach($data as $item)
         <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $item->mahasiswa }}</td>
-            <td>{{ $item->matakuliah }}</td>
+            <td>{{ $item->mahasiswa->nama ?? '-' }}</td>
+            <td>{{ $item->mataKuliah->nama_mk ?? '-' }}</td>
             <td>{{ $item->nilai_angka }}</td>
             <td>{{ $item->nilai_huruf }}</td>
             <td>

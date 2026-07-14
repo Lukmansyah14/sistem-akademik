@@ -5,22 +5,36 @@
 <h1>Tambah Jadwal</h1>
 
 <form action="/jadwal" method="POST">
-
     @csrf
 
     <div class="mb-3">
         <label>Mata Kuliah</label>
-        <input type="text" name="mata_kuliah" class="form-control">
+        <select name="mata_kuliah_id" class="form-control">
+            <option value="">-- Pilih Mata Kuliah --</option>
+            @foreach ($mataKuliahs as $mk)
+                <option value="{{ $mk->id }}">{{ $mk->nama_mk }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="mb-3">
         <label>Dosen</label>
-        <input type="text" name="dosen" class="form-control">
+        <select name="dosen_id" class="form-control">
+            <option value="">-- Pilih Dosen --</option>
+            @foreach ($dosens as $d)
+                <option value="{{ $d->id }}">{{ $d->nama }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="mb-3">
         <label>Ruangan</label>
-        <input type="text" name="ruangan" class="form-control">
+        <select name="ruangan_id" class="form-control">
+            <option value="">-- Pilih Ruangan --</option>
+            @foreach ($ruangans as $r)
+                <option value="{{ $r->id }}">{{ $r->nama_ruangan }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="mb-3">
@@ -33,10 +47,7 @@
         <input type="text" name="jam" class="form-control">
     </div>
 
-    <button class="btn btn-success">
-        Simpan
-    </button>
-
+    <button class="btn btn-success">Simpan</button>
 </form>
 
 @endsection

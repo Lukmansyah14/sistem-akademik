@@ -5,46 +5,42 @@
 <h1>Edit Nilai</h1>
 
 <form action="/nilai/{{ $data->id }}" method="POST">
-
     @csrf
     @method('PUT')
 
     <div class="mb-3">
-        <label>Nama Mahasiswa</label>
-        <input type="text"
-               name="nama_mahasiswa"
-               class="form-control"
-               value="{{ $data->nama_mahasiswa }}">
+        <label>Mahasiswa</label>
+        <select name="mahasiswa_id" class="form-control">
+            @foreach ($mahasiswas as $m)
+                <option value="{{ $m->id }}" {{ $data->mahasiswa_id == $m->id ? 'selected' : '' }}>
+                    {{ $m->nama }} ({{ $m->nim }})
+                </option>
+            @endforeach
+        </select>
     </div>
 
     <div class="mb-3">
         <label>Mata Kuliah</label>
-        <input type="text"
-               name="mata_kuliah"
-               class="form-control"
-               value="{{ $data->mata_kuliah }}">
+        <select name="mata_kuliah_id" class="form-control">
+            @foreach ($mataKuliahs as $mk)
+                <option value="{{ $mk->id }}" {{ $data->mata_kuliah_id == $mk->id ? 'selected' : '' }}>
+                    {{ $mk->nama_mk }}
+                </option>
+            @endforeach
+        </select>
     </div>
 
     <div class="mb-3">
         <label>Nilai Angka</label>
-        <input type="number"
-               name="nilai_angka"
-               class="form-control"
-               value="{{ $data->nilai_angka }}">
+        <input type="number" name="nilai_angka" class="form-control" value="{{ $data->nilai_angka }}">
     </div>
 
     <div class="mb-3">
         <label>Nilai Huruf</label>
-        <input type="text"
-               name="nilai_huruf"
-               class="form-control"
-               value="{{ $data->nilai_huruf }}">
+        <input type="text" name="nilai_huruf" class="form-control" value="{{ $data->nilai_huruf }}">
     </div>
 
-    <button class="btn btn-primary">
-        Update
-    </button>
-
+    <button class="btn btn-primary">Update</button>
 </form>
 
 @endsection
