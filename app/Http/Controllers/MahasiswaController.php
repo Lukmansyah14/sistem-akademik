@@ -4,49 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Jurusan;
 
 class MahasiswaController extends Controller
 {
     public function index()
     {
-        $mahasiswa = Mahasiswa::all();
+        $mahasiswa = Mahasiswa::with('jurusan')->get();
         return view('mahasiswa.index', compact('mahasiswa'));
     }
 
     public function create()
     {
-        return view('mahasiswa.create');
+        $jurusans = Jurusan::all();
+        return view('mahasiswa.create', compact('jurusans'));
     }
 
     public function store(Request $request)
     {
-        Mahasiswa::create($request->all());
+        $validated = $request->validate([
+            'nama'       => 'required|string|max:255',
+            'nim'        => 'required|string|max:20|unique:mahasiswas,nim',
+            'jurusan_id' => 'required|exists:jurusans,id',
+        ]);
 
-        return redirect('/mahasiswa');
+        Mahasiswa::create($validated);
+
+        return redirect('/mahasiswa')->with('success', 'Mahasiswa berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
-
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        $jurusans  = Jurusan::all();
+        return view('mahasiswa.edit', compact('mahasiswa', 'jurusans'));
     }
 
     public function update(Request $request, $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
 
-        $mahasiswa->update($request->all());
+        $validated = $request->validate([
+            'nama'       => 'required|string|max:255',
+            'nim'        => 'required|string|max:20|unique:mahasiswas,nim,' . $mahasiswa->id,
+            'jurusan_id' => 'required|exists:jurusans,id',
+        ]);
 
-        return redirect('/mahasiswa');
+        $mahasiswa->update($validated);
+
+        return redirect('/mahasiswa')->with('success', 'Mahasiswa berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-
-        $mahasiswa->delete();
-
-        return redirect('/mahasiswa');
+        Mahasiswa::findOrFail($id)->delete();
+        return redirect('/mahasiswa')->with('success', 'Mahasiswa berhasil dihapus.');
     }
 }
