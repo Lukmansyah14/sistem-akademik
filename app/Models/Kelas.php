@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kelas extends Model
 {
-    protected $fillable = [
-        'nama_kelas',
-        'tingkat',
-        'wali_kelas'
-    ];
+    protected $table = 'kelas';
+
+    protected $fillable = ['nama_kelas', 'tingkat', 'wali_kelas_id'];
+
+    public function waliKelas()
+    {
+        return $this->belongsTo(Dosen::class, 'wali_kelas_id');
+    }
 }

@@ -6,10 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nilai extends Model
 {
-    protected $fillable = [
-        'nama_mahasiswa',
-        'mata_kuliah',
-        'nilai_angka',
-        'nilai_huruf'
-    ];
+    protected $fillable = ['mahasiswa_id', 'mata_kuliah_id', 'nilai_angka', 'nilai_huruf'];
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class);
+    }
+
+    public function mataKuliah()
+    {
+        return $this->belongsTo(MataKuliah::class, 'mata_kuliah_id');
+    }
 }

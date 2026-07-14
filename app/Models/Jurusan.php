@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jurusan extends Model
 {
-    protected $fillable = [
-        'nama_jurusan',
-        'kode_jurusan'
-    ];
+    protected $fillable = ['nama_jurusan', 'kode_jurusan'];
+
+    public function mahasiswas()
+    {
+        return $this->hasMany(Mahasiswa::class);
+    }
 }
