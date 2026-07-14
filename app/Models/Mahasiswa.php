@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
-    protected $fillable = ['nama', 'nim', 'jurusan_id'];
+    protected $fillable = ['nama', 'nim', 'jurusan_id', 'user_id'];
 
     public function jurusan()
     {
@@ -21,5 +21,15 @@ class Mahasiswa extends Model
     public function absensis()
     {
         return $this->hasMany(Absensi::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function krs()
+    {
+        return $this->hasMany(Krs::class);
     }
 }

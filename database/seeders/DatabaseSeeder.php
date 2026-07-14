@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Mahasiswa;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +42,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
         // 3. Akun keur Mahasiswa (Opsional sekalian bisi butuh)
-        User::updateOrCreate(
+        $mhsUser = User::updateOrCreate(
             ['email' => 'mahasiswa@akademik.com'],
             [
                 'name' => 'Mahasiswa',
@@ -49,6 +50,16 @@ class DatabaseSeeder extends Seeder
                 'role' => 'mahasiswa',
             ]
         );
+
+        // Hubungkan akun mahasiswa demo ke data Mahasiswa supaya fitur KRS bisa langsung dicoba
+        Mahasiswa::updateOrCreate(
+            ['nim' => '00000001'],
+            [
+                'nama' => $mhsUser->name,
+                'user_id' => $mhsUser->id,
+            ]
+        );
+
         // Optional: Tambah info di console
         $this->command->info('✅ Admin user ready!');
     }

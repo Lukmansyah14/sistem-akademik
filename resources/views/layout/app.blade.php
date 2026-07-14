@@ -37,6 +37,10 @@
                 @if(in_array(auth()->user()->role, ['dosen', 'admin']))
                     <a href="{{ url('/absensi') }}" class="btn btn-light btn-sm">Absensi</a>
                 @endif
+
+                @if(in_array(auth()->user()->role, ['mahasiswa', 'admin']))
+                    <a href="{{ route('krs.index') }}" class="btn btn-light btn-sm">KRS</a>
+                @endif
             @endauth
         </div>
 

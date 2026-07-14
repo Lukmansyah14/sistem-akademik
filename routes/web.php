@@ -12,6 +12,7 @@ use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KrsController;
 use App\Models\Jadwal;
 use App\Models\Absensi;
 use App\Models\Nilai;
@@ -128,6 +129,11 @@ Route::middleware('auth')->group(function () {
                 'nilaiTertinggi', 'nilaiTerendah', 'persentaseKehadiran', 'jadwalHariIni', 'namaHariIni'
             ));
         })->name('mahasiswa.dashboard');
+
+        // KRS: mahasiswa mengisi Kartu Rencana Studi untuk semester aktif
+        Route::get('/krs', [KrsController::class, 'index'])->name('krs.index');
+        Route::post('/krs', [KrsController::class, 'store'])->name('krs.store');
+        Route::delete('/krs/{krs}', [KrsController::class, 'destroy'])->name('krs.destroy');
     });
 
     // ------------------------------------------
